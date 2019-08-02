@@ -1,0 +1,24 @@
+//this is grooovy script , jenkinfile
+//this puprose is to push static code ananlysis to sonarqube server from jenkins with Jenkinfile
+// note: multiline comments in groovy slanguage syantx is look like the below two lines
+/* a standalone multiline comment
+   spanning two lines */
+node {
+
+   stage('SCM') {
+	  git 'https://github.com/spring-projects/spring-petclinic.git'
+   }
+   
+   stage ('build the packages') {
+	  sh 'mvn package'
+   }
+   
+   stage('SonarQube analysis') {
+    // performing sonarqube analysis with "withSonarQubeENV(<Name of Server configured in Jenkins>)"
+    withSonarQubeEnv('balasonar') {
+      // requires SonarQube Scanner for Maven 3.2+
+      sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar'
+    }
+  }
+
+}   
